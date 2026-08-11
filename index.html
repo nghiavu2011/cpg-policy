@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPG Policy - Finance Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .message-enter { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-container { height: 500px; overflow-y: auto; }
+        .loading { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1f77b4; margin: 0 2px; animation: pulse 1.5s infinite; }
+        .loading:nth-child(2) { animation-delay: 0.2s; }
+        .loading:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div id="loginPage" class="w-full max-w-md">
+            <!-- Login Page -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center mb-6">
+                    <div class="text-4xl mb-2">📋</div>
+                    <h1 class="text-3xl font-bold text-blue-600">CPG Policy</h1>
+                    <p class="text-gray-600 mt-2">Finance Policy Assistant</p>
+                </div>
+
+                <hr class="my-6">
+
+                <p class="text-sm text-gray-600 mb-4">Ask questions about:</p>
+                <ul class="text-sm text-gray-700 space-y-2 mb-6">
+                    <li>🎁 Gifts & Entertainment</li>
+                    <li>✈️ Business Travel</li>
+                    <li>⚠️ Conflict of Interest</li>
+                    <li>🔐 Confidentiality</li>
+                    <li>💼 Staff Welfare</li>
+                    <li>💰 Insurance Coverage</li>
+                </ul>
+
+                <hr class="my-6">
+
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Login with Company Email</h2>
+
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <input
+                            type="email"
+                            id="emailInput"
+                            placeholder="yourname@cpgcorp.com.sg"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                            required
+                        >
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+                    >
+                        Login
+                    </button>
+                </form>
+
+                <p class="text-xs text-gray-500 mt-4 text-center">💡 Use your @cpgcorp.com.sg email address</p>
+            </div>
+        </div>
+
+        <div id="chatPage" class="w-full max-w-2xl hidden">
+            <!-- Chat Page -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-screen max-h-screen">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold">📋 CPG Policy</h1>
+                        <p class="text-blue-100 text-sm" id="userDisplay"></p>
+                    </div>
+                    <button
+                        id="logoutBtn"
+                        class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold"
+                    >
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="flex flex-1 overflow-hidden">
+                    <div class="w-64 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto hidden md:block">
+                        <h3 class="font-semibold text-gray-800 mb-4">ℹ️ About</h3>
+                        <p class="text-sm text-gray-600 mb-4">Ask questions about Finance/CPG policies and get instant answers.</p>
+
+                        <hr class="my-4">
+
+                        <h3 class="font-semibold text-gray-800 mb-3">📞 Escalation</h3>
+                        <div class="bg-yellow-50 p-3 rounded text-sm text-gray-700">
+                            <p class="font-semibold mb-2">Can't find answer?</p>
+                            <p>Email: <br><strong>vu.trong.nghia@cpgcorp.com.sg</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="flex-1 flex flex-col">
+                        <!-- Messages -->
+                        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
+                            <div class="flex gap-3">
+                                <div class="flex-shrink-0 text-2xl">🧠</div>
+                                <div class="bg-gray-100 text-gray-800 rounded-lg p-4 max-w-sm">
+                                    <p>Hi! 👋 I'm your Finance Policy Assistant.</p>
+                                    <p class="text-sm mt-2">Ask me anything about gifts, travel, insurance, or other policies.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="border-t border-gray-200 p-4 bg-gray-50">
+                            <form id="chatForm" class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="messageInput"
+                                    placeholder="What's your question?"
+                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                    autocomplete="off"
+                                >
+                                <button
+                                    type="submit"
+                                    id="sendBtn"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition"
+                                >
+                                    Send
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/chat';
+        let userEmail = '';
+        let messages = [];
+
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+
+            if (!email.endsWith('@cpgcorp.com.sg')) {
+                alert('❌ Please use your company email (@cpgcorp.com.sg)');
+                return;
+            }
+
+            userEmail = email;
+            document.getElementById('userDisplay').textContent = `👤 Logged in as: ${email}`;
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('chatPage').classList.remove('hidden');
+            document.getElementById('messageInput').focus();
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            userEmail = '';
+            messages = [];
+            document.getElementById('chatContainer').innerHTML = `
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 text-2xl">🧠</div>
+                    <div class="bg-gray-100 text-gray-800 rounded-lg p-4 max-w-sm">
+                        <p>Hi! 👋 I'm your Finance Policy Assistant.</p>
+                        <p class="text-sm mt-2">Ask me anything about gifts, travel, insurance, or other policies.</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('chatPage').classList.add('hidden');
+            document.getElementById('emailInput').value = '';
+            document.getElementById('messageInput').value = '';
+        });
+
+        // Chat Form
+        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = document.getElementById('messageInput').value.trim();
+
+            if (!userMessage) return;
+
+            // Add user message to chat
+            const chatContainer = document.getElementById('chatContainer');
+            const userMessageEl = document.createElement('div');
+            userMessageEl.className = 'flex justify-end message-enter';
+            userMessageEl.innerHTML = `
+                <div class="bg-blue-600 text-white rounded-lg p-4 max-w-sm">
+                    ${userMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                </div>
+            `;
+            chatContainer.appendChild(userMessageEl);
+
+            // Add to messages array
+            messages.push({
+                role: 'user',
+                content: userMessage
+            });
+
+            // Clear input
+            document.getElementById('messageInput').value = '';
+
+            // Show loading indicator
+            const loadingEl = document.createElement('div');
+            loadingEl.className = 'flex gap-3';
+            loadingEl.innerHTML = `
+                <div class="flex-shrink-0 text-2xl">🧠</div>
+                <div class="bg-gray-100 text-gray-800 rounded-lg p-4">
+                    <div class="flex gap-1">
+                        <span class="loading"></span>
+                        <span class="loading"></span>
+                        <span class="loading"></span>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(loadingEl);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                // Send to API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        messages: messages
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to get response');
+                }
+
+                // Remove loading indicator
+                loadingEl.remove();
+
+                // Add bot response
+                const botMessage = data.message;
+                messages.push({
+                    role: 'assistant',
+                    content: botMessage
+                });
+
+                const botMessageEl = document.createElement('div');
+                botMessageEl.className = 'flex gap-3 message-enter';
+                botMessageEl.innerHTML = `
+                    <div class="flex-shrink-0 text-2xl">🧠</div>
+                    <div class="bg-gray-100 text-gray-800 rounded-lg p-4 max-w-lg">
+                        ${formatMessage(botMessage)}
+                    </div>
+                `;
+                chatContainer.appendChild(botMessageEl);
+
+                // Add action buttons
+                const actionsEl = document.createElement('div');
+                actionsEl.className = 'flex gap-2 message-enter';
+                actionsEl.innerHTML = `
+                    <button class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200">✅ Helpful</button>
+                    <button class="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded hover:bg-orange-200">❌ Escalate</button>
+                `;
+                chatContainer.appendChild(actionsEl);
+
+                // Handle escalate button
+                actionsEl.querySelector('button:last-child').addEventListener('click', () => {
+                    alert('Contact: vu.trong.nghia@cpgcorp.com.sg\n\nInclude:\n- Your question\n- What wasn\'t clear\n- Any other details');
+                });
+
+            } catch (error) {
+                loadingEl.remove();
+                const errorEl = document.createElement('div');
+                errorEl.className = 'flex gap-3 message-enter';
+                errorEl.innerHTML = `
+                    <div class="flex-shrink-0 text-2xl">🧠</div>
+                    <div class="bg-red-100 text-red-700 rounded-lg p-4 max-w-sm">
+                        <p>❌ Error: ${error.message}</p>
+                        <p class="text-sm mt-1">Please try again or contact: vu.trong.nghia@cpgcorp.com.sg</p>
+                    </div>
+                `;
+                chatContainer.appendChild(errorEl);
+            }
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+
+        // Format message (basic markdown-like formatting)
+        function formatMessage(text) {
+            return text
+                .replace(/\[\[([^\]]+)\]\]/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/__([\w\s]+)__/g, '<u>$1</u>');
+        }
+    </script>
+</body>
+</html>
